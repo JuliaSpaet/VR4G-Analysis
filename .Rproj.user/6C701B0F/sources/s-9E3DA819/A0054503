@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1539748359326.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3277916055",
+    "id" : "A0054503",
+    "lastKnownWriteTime" : 1539746205,
+    "last_content_update" : 1539746205,
+    "path" : "~/Desktop/Projects_R/VR4G/VR4G.R",
+    "project_path" : "VR4G.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
