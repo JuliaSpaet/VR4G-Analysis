@@ -12,6 +12,19 @@ Locations <- tibble(location=c("Ballina","Batemans", "Bondi", "Byron", "Coffs",
                              "Kingscliff", "Merimbula","Mollymook","Old", 
                              "Port", "Redhead","South","Sussex","Yamba"))
 
+# create table with 'timebin', 'location', 'date' and 'temperature' column 
+timebin<- Locations %>%
+split(.$location) %>%
+  map(function(x) { tibble(timebin = seq(0, 23), location=x$location) }) %>%
+  bind_rows()
+
+timebin_location_date <- Study_Period %>%
+  rowid_to_column('Row') %>%
+  split(.$Row) %>%
+  map(function(x) { timebin %>% mutate(date=x$date) }) %>%
+  bind_rows()
+
+
 #load temperature csv file including VR4G and Hobo data
 temperature <- read.csv(file.choose())
 
@@ -21,12 +34,17 @@ colnames(temperature)[colnames(temperature)=="Temp"] <- "temperature"
 colnames(temperature)[colnames(temperature)=="Date"] <- "date"
 colnames(temperature)[colnames(temperature)=="Bins"] <- "timebin"
 
-temperature2<-mutate(temperature, date= as.Date(date, format= "%Y-%m-%d"))
+temperature2<-mutate(temperature, date= as.Date(date, format= "%Y-%m-%d")) %>% 
+  group_by(location,date,timebin) %>% 
+  summarise(temperature=mean(temperature))
 
 #merge by date, location and timebin
 Temperature_final <- timebin_location_date %>%
   left_join(temperature2,timebin_location_date,
             by= c('date' = 'date','location' = 'location', 'timebin' = 'timebin'))
+
+#I am confused why Temperature_final contains 333 559 rows. When I multiply 24 timebins 
+# with 19 locations and 730 days I get 332 880. Any idea what might be going on here?
 
 # I am trying to add a column with interpolated temperature values. However,
 # the below code runs it through the entire column, not considering the different locations
