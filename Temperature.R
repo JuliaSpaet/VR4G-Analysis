@@ -44,12 +44,11 @@ Temperature_final <- timebin_location_date %>%
 
 nrow(Temperature_final)
 
-<<<<<<< HEAD
 #merge with moonphase file
 moonphase <- read_csv(file.choose())
 TempMoon<-left_join(Temperature_final,moonphase,
                     by=c('date'='date','timebin'='timebin'))  
-=======
+
 # this interpolation is not doing it separately
 Temperature_final$inter_temp<-na.interpolation(Temperature_final$temperature)
 
@@ -82,7 +81,6 @@ Temp_final2 <- Temperature_final %>%
   split(.$location) %>%
   map(inter_tidy)%>%
   bind_rows()
->>>>>>> 4e9b43dd8eb99a08c7a356415a8f691f7f285756
 
 ## Haha that looks better - the problem is that the function inter was only returning one column
 ## So I changed it to a tidyverse form which always returns the data frame
