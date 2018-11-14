@@ -42,9 +42,12 @@ Temperature_final <- timebin_location_date %>%
   left_join(temperature2,timebin_location_date,
             by= c('date' = 'date','location' = 'location', 'timebin' = 'timebin'))
 
+nrow(Temperature_final)
 
-
-  
+#merge with moonphase file
+moonphase <- read_csv(file.choose())
+TempMoon<-left_join(Temperature_final,moonphase,
+                    by=c('date'='date','timebin'='timebin'))  
 
 
 
