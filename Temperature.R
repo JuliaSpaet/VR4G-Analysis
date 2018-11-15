@@ -49,3 +49,4 @@ Temp_final2 <- Temperature_final %>%
   map(inter_tidy)%>%
   bind_rows()
 
+
