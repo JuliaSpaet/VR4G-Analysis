@@ -42,52 +42,10 @@ Temperature_final <- timebin_location_date %>%
   left_join(temperature2,timebin_location_date,
             by= c('date' = 'date','location' = 'location', 'timebin' = 'timebin'))
 
-nrow(Temperature_final)
-
-#merge with moonphase file
-moonphase <- read_csv(file.choose())
-TempMoon<-left_join(Temperature_final,moonphase,
-                    by=c('date'='date','timebin'='timebin'))  
-
-# this interpolation is not doing it separately
-Temperature_final$inter_temp<-na.interpolation(Temperature_final$temperature)
-
-
-inter<- function (x) {x$inter_temp<-na.interpolation(x$temperature)}
-
-# this interpolation seems to be correct but the returned data is not in the right format
-Temp_final <- Temperature_final %>%
-  split(.$location) %>%
-  map(inter)%>%
-  bind_rows()
-  
-# Interpolate Bondi on its own
-bondi <- Temperature_final %>% filter(location == 'Bondi') %>%
-  mutate(inter2 = na.interpolation(temperature))
-
-# Is Bondi on own the same as Bondi with rest
-sum(bondi$inter_temp-bondi$inter2)
-# No it isn't
-
-# this checks that the interpolation 
-sum(bondi$inter2 - Temp_final$Bondi)
-# Yes it is
-
-# Ok so interpolation is working for Temp_final - but location time etc have gone ...
-
-
+#Tidyverse form which always returns the data frame and treats each location separately
 inter_tidy <- function (x) { x %>% mutate(inter_temp = na.interpolation(x$temperature))}
 Temp_final2 <- Temperature_final %>%
   split(.$location) %>%
   map(inter_tidy)%>%
   bind_rows()
-
-## Haha that looks better - the problem is that the function inter was only returning one column
-## So I changed it to a tidyverse form which always returns the data frame
-## The function below would also do that same
-
-inter2 <- function (x) {
-  x$inter_temp<-na.interpolation(x$temperature)
-  return(x)
-}
 
