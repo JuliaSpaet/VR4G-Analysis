@@ -49,4 +49,9 @@ Temp_final2 <- Temperature_final %>%
   map(inter_tidy)%>%
   bind_rows()
 
+#rename col names
+colnames(Temp_final2)[colnames(Temp_final2)=="location"] <- "Location"
+colnames(Temp_final2)[colnames(Temp_final2)=="temperature"] <- "Temperature"
+colnames(Temp_final2)[colnames(Temp_final2)=="date"] <- "Date"
+colnames(Temp_final2)[colnames(Temp_final2)=="timebin"] <- "Timebin"
 
